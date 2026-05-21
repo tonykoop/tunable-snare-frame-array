@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: CERN-OHL-W-2.0
+feature_id,part,operation,angle_deg,inside_radius_mm,material_thickness_mm,k_factor,bend_allowance_mm,blank_deduction_mm,sequence,notes
+FRM-B01,mounting_frame,top flange fold,90,3.0,1.5,0.44,5.74,4.26,1,Fold top 20mm flange inward toward drum side; brake press
+FRM-B02,mounting_frame,bottom flange fold,90,3.0,1.5,0.44,5.74,4.26,2,Fold bottom 20mm flange inward; same setup as FRM-B01
+SHELL-A,shell_A_254mm,roll to cylinder,360,126.0,1.0,0.44,n/a,n/a,1,Rolling not bending; blank W = pi*254 = 798mm; use slip-roll 3-roller
+SHELL-B,shell_B_203mm,roll to cylinder,360,101.0,1.0,0.44,n/a,n/a,1,Roll blank W = pi*203 = 638mm
+SHELL-C,shell_C_152mm,roll to cylinder,360,75.5,1.0,0.44,n/a,n/a,1,Roll blank W = pi*152 = 478mm
+LUG-EAR-B01,lug_ear,base tab fold,90,1.5,1.5,0.44,5.44,3.56,1,Fold 15mm base tab; ear welds to shell OD
