@@ -1,0 +1,597 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tunable Snare Frame Array — Studio Explorer</title>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+<style>
+/* ============================================================
+   Heifer Zephyr — design tokens
+   ============================================================ */
+:root{
+  --walnut:#3D2817; --cedar:#B98B47; --cream:#F8F4E9; --paper:#FFFFFF;
+  --lapis:#1E3A8A; --gold:#D4A017; --ink:#1F1A14; --muted:#6B5E4D;
+  --rule:#E0D6C5; --ok:#2E7D32; --warn:#C89220; --block:#A03A2A;
+  --pill-bg:#FCEFC6; --pill-border:#D4A017;
+  --code-bg:#F2EBDA; --hover:#EFE7D3;
+  --sb-w:260px; --bar-h:56px;
+  --serif:"Fraunces","Source Serif Pro","Iowan Old Style",Georgia,serif;
+  --ui:"Inter","Source Sans Pro","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",Menlo,Consolas,monospace;
+  --italic-serif:"Cormorant Garamond","EB Garamond",Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
+  font-family:var(--ui);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--lapis);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:0.88em;background:var(--code-bg);
+  padding:1px 5px;border-radius:3px}
+pre{font-family:var(--mono);font-size:12px;background:var(--code-bg);
+  padding:12px 14px;border-radius:4px;overflow:auto;line-height:1.45;
+  border-left:3px solid var(--cedar)}
+
+.app-bar{position:sticky;top:0;z-index:30;height:var(--bar-h);
+  background:var(--walnut);color:var(--cream);
+  border-bottom:3px solid var(--gold);
+  display:flex;align-items:center;gap:24px;padding:0 20px}
+.brand{display:flex;align-items:baseline;gap:14px;flex:0 0 auto}
+.wordmark em{font-family:var(--italic-serif);font-style:italic;
+  font-size:22px;color:var(--gold);letter-spacing:0.01em}
+.instrument{font-family:var(--serif);font-size:15px;color:var(--cream);
+  border-left:1px solid rgba(248,244,233,0.3);padding-left:14px}
+.actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+.search{background:rgba(248,244,233,0.12);color:var(--cream);
+  border:1px solid rgba(248,244,233,0.25);border-radius:4px;
+  padding:7px 12px;font-family:var(--ui);font-size:13px;width:280px}
+.search::placeholder{color:rgba(248,244,233,0.55)}
+.search:focus{outline:none;border-color:var(--gold);background:rgba(248,244,233,0.18)}
+.action-btn{display:inline-block;font-family:var(--ui);font-size:12px;
+  letter-spacing:0.04em;text-transform:uppercase;
+  color:var(--cream);border:1px solid rgba(248,244,233,0.35);
+  border-radius:3px;padding:6px 10px}
+.action-btn:hover{background:rgba(248,244,233,0.12);text-decoration:none;color:var(--gold)}
+
+.app{display:grid;grid-template-columns:var(--sb-w) 1fr;
+  min-height:calc(100vh - var(--bar-h))}
+.sidebar{background:var(--paper);border-right:1px solid var(--rule);
+  position:sticky;top:var(--bar-h);height:calc(100vh - var(--bar-h));
+  overflow-y:auto;padding:18px 0}
+.toc{list-style:none;margin:0;padding:0}
+.toc li{margin:0}
+.toc-label{font-family:var(--ui);font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.1em;padding:8px 22px 4px;
+  margin-top:8px}
+.toc-label:first-child{margin-top:0}
+.toc a{display:block;padding:6px 22px 6px 26px;color:var(--ink);
+  font-size:13px;line-height:1.35;border-left:3px solid transparent}
+.toc a:hover{background:var(--hover);text-decoration:none;color:var(--walnut)}
+.toc a.active{border-left-color:var(--lapis);color:var(--walnut);
+  background:linear-gradient(90deg,rgba(30,58,138,0.06),transparent 80%);
+  font-weight:600}
+.toc a .num{display:inline-block;width:20px;color:var(--muted);
+  font-family:var(--mono);font-size:11px}
+.toc a.active .num{color:var(--lapis)}
+
+.main{padding:24px 36px 80px;max-width:1100px;width:100%}
+section{padding-top:8px;scroll-margin-top:calc(var(--bar-h) + 12px)}
+section + section{margin-top:14px;padding-top:24px;
+  border-top:1px solid var(--rule)}
+section h1{font-family:var(--serif);font-weight:600;font-size:30px;
+  color:var(--walnut);margin:0 0 4px;letter-spacing:-0.005em}
+section h1 .eyebrow{display:block;font-family:var(--ui);font-weight:500;
+  font-size:11px;color:var(--lapis);text-transform:uppercase;
+  letter-spacing:0.16em;margin-bottom:6px}
+section h2{font-family:var(--serif);font-weight:600;font-size:19px;
+  color:var(--walnut);margin:22px 0 8px}
+section h3{font-family:var(--ui);font-weight:600;font-size:13px;
+  color:var(--lapis);text-transform:uppercase;letter-spacing:0.08em;
+  margin:18px 0 6px}
+section p{margin:0.6em 0}
+
+.status-card{background:var(--paper);border:1px solid var(--rule);
+  border-top:4px solid var(--lapis);border-radius:6px;
+  padding:18px 22px;margin:6px 0 28px;
+  box-shadow:0 1px 2px rgba(31,26,20,0.04)}
+.status-row{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.status-row + .status-row{margin-top:10px;padding-top:10px;
+  border-top:1px dashed var(--rule)}
+.status-label{font-family:var(--ui);font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.1em;
+  flex:0 0 110px;padding-top:3px}
+.status-val{flex:1;font-size:14px}
+.status-val .strong{font-weight:600;color:var(--walnut)}
+.pill{display:inline-block;padding:3px 10px;border-radius:11px;
+  font-family:var(--ui);font-size:11px;font-weight:600;
+  letter-spacing:0.04em;text-transform:uppercase}
+.pill-private{background:var(--pill-bg);color:var(--walnut);border:1px solid var(--pill-border)}
+.pill-gate{background:#FAEFE0;color:var(--warn);border:1px solid var(--warn)}
+.pill-fam{background:#F8E3DC;color:var(--block);border:1px solid var(--block);margin-right:6px}
+.gates{list-style:none;margin:0;padding:0;display:flex;
+  flex-direction:column;gap:8px}
+.gate{display:flex;align-items:flex-start;gap:10px}
+.gate-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%;
+  margin-top:5px;background:var(--warn);
+  box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--warn)}
+.gate-dot.ok{background:var(--ok);box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--ok)}
+.gate-dot.block{background:var(--block);box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--block)}
+.gate-label{flex:1;font-size:13px;color:var(--ink)}
+
+.file{margin:14px 0;background:var(--paper);border:1px solid var(--rule);
+  border-radius:5px;overflow:hidden}
+.file-head{display:flex;align-items:center;gap:10px;
+  padding:9px 14px;background:#FAF6EC;cursor:pointer;
+  border-bottom:1px solid var(--rule);font-size:13px;
+  user-select:none;transition:background 80ms}
+.file-head:hover{background:#F3ECD7}
+.file-head .icon{flex:0 0 18px;width:18px;height:18px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:11px;transition:transform 120ms}
+.file.open .file-head .icon{transform:rotate(90deg)}
+.file-name{font-family:var(--mono);font-size:12.5px;color:var(--walnut);font-weight:500}
+.file-type{display:inline-block;font-family:var(--ui);font-size:10px;
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--cream);color:var(--muted);padding:2px 6px;
+  border-radius:2px;margin-left:6px}
+.file-desc{flex:1;color:var(--muted);font-size:12px;text-align:right;padding-left:12px}
+.file-body{display:none;padding:14px 16px;background:var(--paper);font-size:13.5px}
+.file.open .file-body{display:block}
+.file-actions{display:flex;gap:8px;align-items:center;margin-left:6px}
+.file-actions a{font-size:11px;color:var(--muted);
+  border:1px solid var(--rule);padding:2px 6px;border-radius:2px;
+  letter-spacing:0.04em;text-transform:uppercase}
+.file-actions a:hover{color:var(--lapis);border-color:var(--lapis);text-decoration:none}
+
+table.data{width:100%;border-collapse:collapse;font-size:12px;
+  font-family:var(--mono);background:var(--paper)}
+table.data th,table.data td{padding:5px 8px;text-align:left;
+  border-bottom:1px solid var(--rule);vertical-align:top;
+  white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+table.data th{background:var(--walnut);color:var(--cream);
+  font-family:var(--ui);font-size:11px;font-weight:600;
+  letter-spacing:0.04em;text-transform:uppercase;
+  position:sticky;top:0;z-index:1}
+table.data tr:nth-child(even) td{background:#FBF7EC}
+table.data tr:hover td{background:#F3ECD7}
+.table-wrap{overflow:auto;max-height:540px;border:1px solid var(--rule);border-radius:4px}
+.table-stats{font-size:11px;color:var(--muted);padding:4px 0 8px;font-family:var(--ui)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:12px;margin:14px 0}
+.card{background:var(--paper);border:1px solid var(--rule);
+  border-radius:4px;padding:14px 16px;font-size:13px}
+.card .k{font-family:var(--ui);font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.card .v{font-family:var(--serif);font-size:16px;color:var(--walnut);font-weight:600;line-height:1.3}
+.card .v .sub{display:block;font-family:var(--ui);font-size:12px;
+  color:var(--muted);font-weight:400;margin-top:3px}
+
+.callout{border-left:4px solid var(--cedar);background:#FAF6EC;
+  padding:14px 18px;margin:14px 0;font-size:13.5px;border-radius:0 4px 4px 0}
+.callout.warn{border-color:var(--warn);background:#FCEFC6}
+.callout .lab{font-family:var(--ui);font-size:10.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--walnut);
+  margin-bottom:6px;display:block}
+.callout.warn .lab{color:var(--warn)}
+.callout p:first-of-type{margin-top:0}
+.callout p:last-of-type{margin-bottom:0}
+
+.wolfram-embed-wrap{margin:14px 0}
+.wolfram-embed-status{display:flex;align-items:center;gap:10px;
+  padding:9px 14px;background:#FAF6EC;border:1px solid var(--rule);
+  border-radius:4px 4px 0 0;font-size:12.5px}
+.wolfram-embed-status.pending{background:#FCEFC6;border-color:var(--pill-border)}
+.wolfram-embed-status.pending .dot{background:var(--warn)}
+.wolfram-embed-status .dot{width:10px;height:10px;border-radius:50%;
+  flex:0 0 10px;box-shadow:0 0 0 2px var(--paper)}
+.wolfram-embed-status .label{font-family:var(--ui);text-transform:uppercase;
+  letter-spacing:0.08em;font-size:10.5px;font-weight:700;color:var(--walnut)}
+.wolfram-pending-body{padding:16px 22px;background:var(--paper);
+  border:1px solid var(--rule);border-top:none;border-radius:0 0 4px 4px;
+  color:var(--ink);font-size:13.5px}
+.wolfram-pending-body p{margin:0.5em 0}
+
+.md{font-size:14px;line-height:1.6}
+.md h1,.md h2,.md h3,.md h4{font-family:var(--serif);color:var(--walnut);
+  margin-top:1.2em;margin-bottom:0.4em;line-height:1.3}
+.md h1{font-size:20px} .md h2{font-size:17px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+.md h3{font-size:14px;font-family:var(--ui);text-transform:uppercase;
+  letter-spacing:0.06em;color:var(--lapis)}
+.md p{margin:0.65em 0}
+.md ul,.md ol{padding-left:22px;margin:0.5em 0}
+.md li{margin:3px 0}
+.md blockquote{border-left:3px solid var(--cedar);padding-left:14px;
+  color:var(--muted);font-style:italic;margin:0.8em 0}
+.md table{width:100%;border-collapse:collapse;margin:0.8em 0;font-size:12.5px}
+.md table th,.md table td{padding:5px 8px;border:1px solid var(--rule);
+  text-align:left;vertical-align:top}
+.md table th{background:var(--walnut);color:var(--cream);
+  font-family:var(--ui);font-size:11px;letter-spacing:0.04em}
+.md table tr:nth-child(even) td{background:#FBF7EC}
+.md code{font-size:0.88em}
+.md hr{border:none;border-top:1px solid var(--gold);margin:1em 0}
+
+.muted{color:var(--muted)}
+mark.hit{background:var(--gold);color:var(--ink);padding:0 2px;border-radius:2px}
+.placeholder{background:#FAF6EC;border:1px dashed var(--cedar);
+  border-radius:4px;padding:14px 18px;color:var(--muted);
+  font-size:13.5px;font-style:italic}
+
+@media print{
+  .app-bar,.sidebar,.actions,.file-head{display:none}
+  .app{grid-template-columns:1fr}
+  .file-body{display:block !important;border:none;padding:0}
+  .main{max-width:none;padding:0}
+}
+@media (max-width:880px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .actions .search{width:160px}
+  .main{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<header class="app-bar">
+  <div class="brand">
+    <span class="wordmark"><em>Heifer Zephyr</em></span>
+    <span class="instrument">Tunable Snare Frame Array · Studio Explorer</span>
+  </div>
+  <div class="actions">
+    <input id="search" class="search" placeholder="Search packet content…" aria-label="Search packet content">
+    <a class="action-btn" href="../instrument-showcase/site/library.html" title="Browse all studio explorers">← Library</a>
+    <a class="action-btn" href="https://github.com/tonykoop/tunable-snare-frame-array" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</header>
+
+<div class="app">
+
+<nav class="sidebar" aria-label="Sections">
+  <ol class="toc" id="toc"></ol>
+</nav>
+
+<main class="main">
+
+<article class="status-card">
+  <div class="status-row">
+    <div class="status-label">Build target</div>
+    <div class="status-val"><span class="strong">Tunable Snare Frame Array</span> · 3-piece hand percussion</div>
+  </div>
+  <div class="status-row">
+    <div class="status-label">Status</div>
+    <div class="status-val"><span class="pill pill-private">Private · v0.1.0-blueprint</span>&nbsp;&nbsp;<span class="muted">L0 blueprint — design packet, no prototype yet.</span></div>
+  </div>
+  <div class="status-row">
+    <div class="status-label">Family</div>
+    <div class="status-val"><span class="pill-fam pill">drum</span><span class="muted">Percussion · membranophone · frame drum array</span></div>
+  </div>
+  <div class="status-row">
+    <div class="status-label">Pitch set</div>
+    <div class="status-val"><span class="strong">D3 · A3 · D4</span> &nbsp;—&nbsp; open D–A–D tuning (perfect 5th + 4th); re-tuneable by head tension</div>
+  </div>
+  <div class="status-row">
+    <div class="status-label">Release gates</div>
+    <div class="status-val">
+      <ul class="gates">
+        <li class="gate"><span class="gate-dot block"></span><span class="gate-label">Private until first prototype built and pitch targets measured.</span></li>
+        <li class="gate"><span class="gate-dot block"></span><span class="gate-label">Private until shell-OD / head-fit tolerance verified on real hardware.</span></li>
+        <li class="gate"><span class="gate-dot block"></span><span class="gate-label">Private until Drum B (8in, A3) tension-to-burst margin confirmed with Remo head.</span></li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<section id="overview" data-toc="Overview" data-toc-group="Project">
+  <h1><span class="eyebrow">01 · Overview</span>Tunable Snare Frame Array</h1>
+  <p>Three small snare-style frame drums — 10″, 8″, and 6″ — welded from 1.0 mm cold-rolled steel cylinders and mounted side-by-side on a shared 1.5 mm CRS plasma-cut bracket. Each drum is independently tensioned via standard lug hardware and fitted with a bought Remo Ambassador head and snare wire mechanism. Together they form a 3-pitch hand percussion array tuned to D3 · A3 · D4 by default.</p>
+  <p>This explorer is the studio-facing build packet for <strong>tunable-snare-frame-array</strong>. Sections below cover design + acoustic model, BOM, flat-pattern geometry, fabrication plan, validation gates, risks, and capstone deliverables.</p>
+  <div class="cards">
+    <div class="card"><div class="k">Shells</div><div class="v">3 cylinders<span class="sub">1.0mm CRS · 6/8/10 in OD</span></div></div>
+    <div class="card"><div class="k">Frame</div><div class="v">1 bracket<span class="sub">1.5mm CRS · 450mm wide</span></div></div>
+    <div class="card"><div class="k">Pitch set</div><div class="v">D3 · A3 · D4<span class="sub">Bessel membrane model</span></div></div>
+    <div class="card"><div class="k">Total est. cost</div><div class="v">~$146 USD<span class="sub">Material + bought hardware</span></div></div>
+  </div>
+</section>
+
+<section id="design" data-toc="Design" data-toc-group="Design">
+  <h1><span class="eyebrow">02 · Design</span>Parametric Design</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">design.md</span><span class="file-type">MD</span><span class="file-desc">Acoustic model · geometry · acceptance targets</span><span class="file-actions"><a href="design.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="design.md"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">parameters.csv</span><span class="file-type">CSV</span><span class="file-desc">All dimensions — single source of truth</span><span class="file-actions"><a href="parameters.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="parameters.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">tuning-notes.md</span><span class="file-type">MD</span><span class="file-desc">Pitch targets · tension math · alternate tunings</span><span class="file-actions"><a href="tuning-notes.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="tuning-notes.md"></div></div>
+</section>
+
+<section id="wolfram" data-toc="Acoustic Model" data-toc-group="Design">
+  <h1><span class="eyebrow">03 · Wolfram</span>Interactive Acoustic Model</h1>
+  <p>First-order Bessel membrane model. Computes required tension per drum to hit D3/A3/D4 targets; includes tension sweep for Drum B (critical: highest required tension) and inharmonic partial ratios.</p>
+  <div class="wolfram-embed-wrap"
+       data-cloud-url=""
+       data-cloud-path="wolfram-starter.wl"
+       data-notebook-name="wolfram-starter"
+       data-kind="local-wl"
+       data-permission="local"></div>
+</section>
+
+<section id="bom" data-toc="Bill of Materials" data-toc-group="Build">
+  <h1><span class="eyebrow">04 · BOM</span>Bill of Materials</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">bom.csv</span><span class="file-type">CSV</span><span class="file-desc">Line items · planning estimate</span><span class="file-actions"><a href="bom.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="bom.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">hardware.csv</span><span class="file-type">CSV</span><span class="file-desc">Bought hardware: lugs, rods, heads, snares</span><span class="file-actions"><a href="hardware.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="hardware.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">sourcing.csv</span><span class="file-type">CSV</span><span class="file-desc">Suppliers · part numbers · lead time hints</span><span class="file-actions"><a href="sourcing.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="sourcing.csv"></div></div>
+</section>
+
+<section id="flat-patterns" data-toc="Flat Patterns" data-toc-group="Build">
+  <h1><span class="eyebrow">05 · Sheet Metal</span>Flat Patterns &amp; Bend Table</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">flat-pattern-checklist.md</span><span class="file-type">MD</span><span class="file-desc">DXF naming · layer scheme · cylinder blank math · coupon tests</span><span class="file-actions"><a href="flat-pattern-checklist.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="flat-pattern-checklist.md"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">bend-table.csv</span><span class="file-type">CSV</span><span class="file-desc">Per-feature bend allowance · sequence</span><span class="file-actions"><a href="bend-table.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="bend-table.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">cut-list.csv</span><span class="file-type">CSV</span><span class="file-desc">Blank sizes · nesting notes</span><span class="file-actions"><a href="cut-list.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="cut-list.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">solidworks-plan.md</span><span class="file-type">MD</span><span class="file-desc">Feature tree · equations · assembly plan</span><span class="file-actions"><a href="solidworks-plan.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="solidworks-plan.md"></div></div>
+</section>
+
+<section id="fabrication" data-toc="Fabrication Plan" data-toc-group="Build">
+  <h1><span class="eyebrow">06 · Fabrication</span>Fabrication Plan</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">fabrication-plan.md</span><span class="file-type">MD</span><span class="file-desc">Cut → roll → TIG → lug → head → tune sequence</span><span class="file-actions"><a href="fabrication-plan.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="fabrication-plan.md"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">assembly-manual.md</span><span class="file-type">MD</span><span class="file-desc">Assembly steps with photo placeholders</span><span class="file-actions"><a href="assembly-manual.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="assembly-manual.md"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">cnc/operations.csv</span><span class="file-type">CSV</span><span class="file-desc">Plasma + slip-roll + brake operations</span><span class="file-actions"><a href="cnc/operations.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="cnc/operations.csv"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">cnc/setup-sheet.md</span><span class="file-type">MD</span><span class="file-desc">Machine settings for plasma / slip-roll / brake</span><span class="file-actions"><a href="cnc/setup-sheet.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="cnc/setup-sheet.md"></div></div>
+</section>
+
+<section id="validation" data-toc="Validation Gates" data-toc-group="Validate">
+  <h1><span class="eyebrow">07 · Validation</span>Validation Gates</h1>
+  <div class="callout warn"><span class="lab">Blueprint stage</span><p>All <code>measured</code> and <code>result</code> fields are <code>pending</code>. Populate after first prototype build.</p></div>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">validation.csv</span><span class="file-type">CSV</span><span class="file-desc">20 test gates · predicted targets · methods · tolerances</span><span class="file-actions"><a href="validation.csv" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-csv="validation.csv"></div></div>
+</section>
+
+<section id="risks" data-toc="Risk Register" data-toc-group="Validate">
+  <h1><span class="eyebrow">08 · Risks</span>Risk Register</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">risks.md</span><span class="file-type">MD</span><span class="file-desc">Safety · manufacturability · acoustic failure modes</span><span class="file-actions"><a href="risks.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="risks.md"></div></div>
+</section>
+
+<section id="images" data-toc="Images" data-toc-group="Publish">
+  <h1><span class="eyebrow">09 · Images</span>Photo Placeholders</h1>
+  <div class="callout"><span class="lab">Placeholder — no photos yet</span><p>First prototype build will populate <code>images/</code>. See <a href="photo-shotlist.md">photo-shotlist.md</a> for required shots.</p></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">photo-shotlist.md</span><span class="file-type">MD</span><span class="file-desc">Required shots for capstone deck</span><span class="file-actions"><a href="photo-shotlist.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="photo-shotlist.md"></div></div>
+  <div class="file"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">visual-bom-brief.md</span><span class="file-type">MD</span><span class="file-desc">Visual BOM render brief</span><span class="file-actions"><a href="visual-bom-brief.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="visual-bom-brief.md"></div></div>
+</section>
+
+<section id="rfq" data-toc="Supplier RFQ" data-toc-group="Publish">
+  <h1><span class="eyebrow">10 · RFQ</span>Supplier RFQ</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">supplier-rfq.md</span><span class="file-type">MD</span><span class="file-desc">Quote-ready text for sheet stock + drum hardware</span><span class="file-actions"><a href="supplier-rfq.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="supplier-rfq.md"></div></div>
+</section>
+
+<section id="agent-record" data-toc="Agent Record" data-toc-group="Publish">
+  <h1><span class="eyebrow">11 · Agent Record</span>Build Session Log</h1>
+  <div class="file open"><div class="file-head" onclick="toggleFile(this)"><span class="icon">▶</span><span class="file-name">agent-record.md</span><span class="file-type">MD</span><span class="file-desc">Runtime · qmd citations · assumptions · unknowns</span><span class="file-actions"><a href="agent-record.md" target="_blank" rel="noopener">Open</a></span></div><div class="file-body" data-md="agent-record.md"></div></div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
+          .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function inlineMD(s){
+  return s
+    .replace(/`([^`]+)`/g,(m,c)=>'<code>'+c+'</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*]+)\*/g,'$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+}
+function parseCSVRow(line){
+  const out=[];let cur='';let q=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(q){if(c==='"'&&line[i+1]==='"'){cur+='"';i++;}
+    else if(c==='"'){q=false;}else cur+=c;}
+    else{if(c===','){out.push(cur);cur='';}
+    else if(c==='"'){q=true;}else cur+=c;}
+  }
+  out.push(cur);return out;
+}
+function renderCSV(target,text){
+  const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.length&&!l.startsWith('#'));
+  if(!lines.length){target.innerHTML='<p class="muted">Empty</p>';return;}
+  const head=parseCSVRow(lines.shift());
+  const rows=lines.map(parseCSVRow);
+  const wrap=document.createElement('div');wrap.className='table-wrap';
+  const tbl=document.createElement('table');tbl.className='data';
+  const thead=document.createElement('thead');const tr=document.createElement('tr');
+  head.forEach(h=>{const th=document.createElement('th');th.textContent=h;tr.appendChild(th);});
+  thead.appendChild(tr);tbl.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  rows.forEach(r=>{const trr=document.createElement('tr');
+    r.forEach(c=>{const td=document.createElement('td');td.textContent=c;td.title=c;trr.appendChild(td);});
+    tbody.appendChild(trr);});
+  tbl.appendChild(tbody);wrap.appendChild(tbl);target.appendChild(wrap);
+  const stats=document.createElement('div');stats.className='table-stats';
+  stats.textContent=rows.length+' rows · '+head.length+' columns';
+  target.appendChild(stats);
+}
+function renderMD(src){
+  const lines=src.replace(/\r/g,'').split('\n');
+  const out=[];let i=0;
+  while(i<lines.length){
+    const line=lines[i];let m;
+    if((m=line.match(/^(#{1,4})\s+(.*)$/))){
+      const lvl=m[1].length;
+      out.push('<h'+lvl+'>'+inlineMD(escapeHTML(m[2]))+'</h'+lvl+'>');
+      i++;continue;
+    }
+    if(line.match(/^---+\s*$/)){out.push('<hr>');i++;continue;}
+    if(line.startsWith('```')){
+      const buf=[];i++;
+      while(i<lines.length&&!lines[i].startsWith('```')){buf.push(lines[i]);i++;}
+      i++;out.push('<pre>'+escapeHTML(buf.join('\n'))+'</pre>');continue;
+    }
+    if(line.match(/^\s*\|/)&&lines[i+1]&&lines[i+1].match(/^\s*\|[\s\-:\|]+\|\s*$/)){
+      const head=line.split('|').slice(1,-1).map(c=>c.trim());
+      i+=2;const rows=[];
+      while(i<lines.length&&lines[i].match(/^\s*\|/)){
+        rows.push(lines[i].split('|').slice(1,-1).map(c=>c.trim()));i++;
+      }
+      let t='<table><thead><tr>'+head.map(h=>'<th>'+inlineMD(escapeHTML(h))+'</th>').join('')+'</tr></thead><tbody>';
+      rows.forEach(r=>{t+='<tr>'+r.map(c=>'<td>'+inlineMD(escapeHTML(c))+'</td>').join('')+'</tr>';});
+      t+='</tbody></table>';out.push(t);continue;
+    }
+    if(line.startsWith('> ')){
+      const buf=[];
+      while(i<lines.length&&lines[i].startsWith('> ')){buf.push(lines[i].replace(/^>\s?/,''));i++;}
+      out.push('<blockquote>'+renderMD(buf.join('\n'))+'</blockquote>');continue;
+    }
+    if(line.match(/^[-*]\s+/)){
+      const buf=[];
+      while(i<lines.length&&lines[i].match(/^[-*]\s+/)){
+        buf.push('<li>'+inlineMD(escapeHTML(lines[i].replace(/^[-*]\s+/,'')))+'</li>');i++;
+      }
+      out.push('<ul>'+buf.join('')+'</ul>');continue;
+    }
+    if(line.match(/^\d+\.\s+/)){
+      const buf=[];
+      while(i<lines.length&&lines[i].match(/^\d+\.\s+/)){
+        buf.push('<li>'+inlineMD(escapeHTML(lines[i].replace(/^\d+\.\s+/,'')))+'</li>');i++;
+      }
+      out.push('<ol>'+buf.join('')+'</ol>');continue;
+    }
+    if(line.trim()===''||line.startsWith('<!--')){i++;continue;}
+    const buf=[line];i++;
+    while(i<lines.length&&lines[i].trim()!==''&&
+          !lines[i].match(/^(#{1,4}\s|[-*]\s|\d+\.\s|>\s|\||---+|```)/)){
+      buf.push(lines[i]);i++;
+    }
+    out.push('<p>'+inlineMD(escapeHTML(buf.join(' ')))+'</p>');
+  }
+  return out.join('\n');
+}
+async function fetchText(fn){
+  try{const r=await fetch(fn,{cache:'no-store'});if(!r.ok)return null;return await r.text();}
+  catch(e){return null;}
+}
+async function initFiles(){
+  const csvs=document.querySelectorAll('[data-csv]');
+  for(const el of csvs){
+    const fn=el.dataset.csv;
+    const text=await fetchText(fn);
+    if(text===null){el.innerHTML='<p class="muted">Not loadable here (local CORS). <a href="'+fn+'" target="_blank" rel="noopener">Open raw →</a></p>';continue;}
+    el.innerHTML='';renderCSV(el,text);
+  }
+  const mds=document.querySelectorAll('[data-md]');
+  for(const el of mds){
+    const fn=el.dataset.md;
+    const text=await fetchText(fn);
+    if(text===null){el.innerHTML='<p class="muted">Not loadable here (local CORS). <a href="'+fn+'" target="_blank" rel="noopener">Open raw →</a></p>';continue;}
+    const wrap=document.createElement('div');wrap.className='md';
+    wrap.innerHTML=renderMD(text);el.innerHTML='';el.appendChild(wrap);
+  }
+}
+window.toggleFile=function(headEl){headEl.parentElement.classList.toggle('open');};
+function buildTOC(){
+  const sidebar=document.getElementById('toc');
+  let lastGroup=null;let num=0;
+  document.querySelectorAll('section[data-toc]').forEach(sec=>{
+    const group=sec.dataset.tocGroup||'';
+    if(group!==lastGroup){
+      const lbl=document.createElement('li');lbl.className='toc-label';
+      lbl.textContent=group;sidebar.appendChild(lbl);lastGroup=group;
+    }
+    num++;
+    const li=document.createElement('li');
+    const a=document.createElement('a');
+    a.href='#'+sec.id;
+    a.innerHTML='<span class="num">'+String(num).padStart(2,'0')+'</span>'+sec.dataset.toc;
+    li.appendChild(a);sidebar.appendChild(li);
+  });
+}
+function activeTOC(){
+  const links={};
+  document.querySelectorAll('#toc a').forEach(a=>{links[a.getAttribute('href').slice(1)]=a;});
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      const a=links[en.target.id];if(!a)return;
+      if(en.isIntersecting){Object.values(links).forEach(x=>x.classList.remove('active'));a.classList.add('active');}
+    });
+  },{rootMargin:'-60px 0px -55% 0px',threshold:0});
+  document.querySelectorAll('section[id]').forEach(sec=>obs.observe(sec));
+}
+function setupSearch(){
+  const input=document.getElementById('search');
+  let prevHits=[];
+  function clearHits(){prevHits.forEach(node=>{const t=document.createTextNode(node.textContent);node.parentNode.replaceChild(t,node);});prevHits=[];}
+  function highlight(text){
+    if(!text){clearHits();return;}
+    clearHits();
+    const main=document.querySelector('.main');
+    const walker=document.createTreeWalker(main,NodeFilter.SHOW_TEXT,{
+      acceptNode(n){
+        if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+        if(n.parentElement.closest('script,style,template,mark'))return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const re=new RegExp('('+text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    const todo=[];let n;
+    while((n=walker.nextNode())){if(n.nodeValue.match(re))todo.push(n);}
+    let first=null;
+    todo.forEach(node=>{
+      const frag=document.createDocumentFragment();
+      const parts=node.nodeValue.split(re);
+      parts.forEach(p=>{
+        if(re.test(p)){const m=document.createElement('mark');m.className='hit';m.textContent=p;frag.appendChild(m);prevHits.push(m);if(!first)first=m;}
+        else{frag.appendChild(document.createTextNode(p));}
+        re.lastIndex=0;
+      });
+      node.parentNode.replaceChild(frag,node);
+    });
+    if(first){first.scrollIntoView({behavior:'smooth',block:'center'});}
+  }
+  let t;
+  input.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>highlight(input.value.trim()),220);});
+}
+function initWolframEmbeds(){
+  document.querySelectorAll('.wolfram-embed-wrap').forEach(el=>{
+    const url=(el.dataset.cloudUrl||'').trim();
+    const name=el.dataset.notebookName||'notebook';
+    const path=el.dataset.cloudPath||'';
+    const permission=(el.dataset.permission||'').trim().toLowerCase();
+    const isLocal=permission==='local';
+    if(isLocal){
+      el.innerHTML=
+        '<div class="wolfram-embed-status pending">'+
+          '<span class="dot"></span>'+
+          '<span class="label">Local notebook</span>'+
+          '<span>Publish via wolfram-cloud-sync for an embeddable iframe</span>'+
+        '</div>'+
+        '<div class="wolfram-pending-body">'+
+          '<p><strong>'+escapeHTML(name)+'</strong> exists in this repo but does not yet have a Cloud embed URL.</p>'+
+          (path?'<p>Local path: <code>'+escapeHTML(path)+'</code></p>':'')+
+          '<p>First-order Bessel membrane model: <code>f = (2.4048/(2πr)) · √(T/σ)</code> for each drum.</p>'+
+        '</div>';
+      return;
+    }
+    el.innerHTML='<div class="wolfram-embed-status pending"><span class="dot"></span><span class="label">Pending</span><span>No Cloud URL yet.</span></div>';
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTOC();
+  activeTOC();
+  setupSearch();
+  initWolframEmbeds();
+  initFiles();
+});
+})();
+</script>
+
+<footer style="background:var(--walnut);color:var(--cream);padding:16px 36px;font-size:12px;font-family:var(--ui);display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:60px">
+  <span>Hardware: <a href="LICENSE-HARDWARE.md" style="color:var(--gold)">CERN-OHL-W v2.0</a></span>
+  <span>Docs: <a href="LICENSE-DOCS.md" style="color:var(--gold)">CC BY 4.0</a></span>
+  <span style="margin-left:auto;color:rgba(248,244,233,0.5)">Heifer Zephyr · tunable-snare-frame-array · v0.1.0-blueprint</span>
+  <a href="agent-record.md" style="color:rgba(248,244,233,0.6);font-size:11px">Agent record</a>
+</footer>
+
+</body>
+</html>
