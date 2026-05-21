@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: CERN-OHL-W-2.0
+op_id,part,machine,operation,tool,speed_ipm,kerf_mm,passes,notes
+OP-01,shell_A_blank,plasma cutter,profile cut 798x60mm rectangle,Hypertherm 45XP,60,1.5,1,Shear preferred if available; plasma for speed
+OP-02,shell_B_blank,plasma cutter,profile cut 638x50mm rectangle,Hypertherm 45XP,60,1.5,1,Can nest B + C on same stock panel as A
+OP-03,shell_C_blank,plasma cutter,profile cut 478x40mm rectangle,Hypertherm 45XP,65,1.5,1,Smallest blank; nest at end of 300x900 sheet
+OP-04,mounting_frame,plasma cutter,profile cut 450x131.5mm + 3 circles + holes,Hypertherm 45XP,50,1.5,1,CAD: use DXF from drawings/frame_flat_blank.dxf
+OP-05,lug_ear,plasma cutter,profile cut 60x40mm blanks x16,Hypertherm 45XP,65,1.5,1,Nest all 16 on 16-gauge scrap
+OP-06,shell_A_blank,slip-roll,roll to 254mm OD cylinder,3-roller slip-roll,manual,n/a,2-3,Start at 300mm setting; iterate to 254mm OD; measure each pass
+OP-07,shell_B_blank,slip-roll,roll to 203mm OD cylinder,3-roller slip-roll,manual,n/a,2-3,Start at 240mm; iterate
+OP-08,shell_C_blank,slip-roll,roll to 152mm OD cylinder,3-roller slip-roll,manual,n/a,2-3,Start at 180mm; iterate; smallest cylinder — watch for creasing
+OP-09,mounting_frame,brake press,bend top + bottom flanges 90deg,brake press,manual,n/a,2,See bend-table.csv FRM-B01/FRM-B02
