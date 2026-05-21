@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: CERN-OHL-W-2.0
+item,qty,spec,material,supplier_hint,notes
+Drum lug (tension claw),16,8-32 or M5 threaded claw lug,zinc-plated steel,Amazon / drum shop,6 per 10in + 6 per 8in + 4 per 6in
+Tension rod,16,35-40mm 8-32 or M5 with washer,steel,Amazon / drum shop,Sold in packs of 6 or 10
+Counter-hoop 10-inch,1,standard triple-flange steel hoop,steel,Amazon / drum shop,Must match head OD exactly
+Counter-hoop 8-inch,1,standard triple-flange steel hoop,steel,Amazon / drum shop,Must match head OD exactly
+Counter-hoop 6-inch,1,standard triple-flange steel hoop,steel,Amazon / drum shop,Must match head OD exactly
+Snare strainer 12-strand,1,butt-style with thumb-wheel,steel/nylon,Amazon / Drumfactorydir,Fits 10in drum; P-85 style
+Snare strainer 10-strand,1,butt-style with thumb-wheel,steel/nylon,Amazon / Drumfactorydir,Fits 8in drum
+Snare strainer 8-strand,1,butt-style with thumb-wheel,steel/nylon,Amazon / Drumfactorydir,Fits 6in drum
+M5 x 20mm bolt,12,hex-head zinc-plated,steel,hardware store,Shell-to-frame mount
+M5 nut,12,hex nut,steel,hardware store,Pairs with above bolts
+Drum key,1,standard square-drive,steel,any drum shop,For head tensioning
