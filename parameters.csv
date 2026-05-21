@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: CERN-OHL-W-2.0
+name,value,unit,source,confidence
+drum_a_od_nominal,250,mm,design intent,high
+drum_a_od_standard,254,mm,Remo Ambassador 10in catalog,high
+drum_a_depth,60,mm,proportional estimate,medium
+drum_a_radius,127,mm,OD/2,high
+drum_a_target_hz,146.8,Hz,D3 equal temperament,high
+drum_a_lug_count,6,count,standard 10in hardware,high
+drum_a_snare_strands,12,count,scaled to head area,medium
+drum_b_od_nominal,200,mm,design intent,high
+drum_b_od_standard,203,mm,Remo Ambassador 8in catalog,high
+drum_b_depth,50,mm,proportional estimate,medium
+drum_b_radius,101.5,mm,OD/2,high
+drum_b_target_hz,220.0,Hz,A3 equal temperament,high
+drum_b_lug_count,6,count,standard 8in hardware,high
+drum_b_snare_strands,10,count,scaled to head area,medium
+drum_c_od_nominal,150,mm,design intent,high
+drum_c_od_standard,152,mm,Remo Ambassador 6in catalog,high
+drum_c_depth,40,mm,proportional estimate,medium
+drum_c_radius,76,mm,OD/2,high
+drum_c_target_hz,293.7,Hz,D4 equal temperament,high
+drum_c_lug_count,4,count,standard 6in hardware,high
+drum_c_snare_strands,8,count,scaled to head area,medium
+shell_material,CRS,,cold-rolled steel,high
+shell_thickness_mm,1.0,mm,Maker Nexus 20-gauge stock,high
+shell_k_factor,0.44,dimensionless,standard mild steel estimate,medium
+shell_bend_radius_inside_mm,1.5,mm,2x material thickness,medium
+frame_material,CRS,,cold-rolled steel,high
+frame_thickness_mm,1.5,mm,Maker Nexus 16-gauge stock,high
+frame_overall_width_mm,450,mm,design intent — clears 3 shells + gaps,medium
+frame_overall_height_mm,80,mm,nominal frame bar height,medium
+frame_flange_height_mm,20,mm,90-deg stiffener,medium
+head_area_density_kgm2,0.18,kg/m2,Remo Ambassador Mylar nominal,low
+head_tension_target_Nm,2200,N/m,estimated for target Hz (wolfram),low
+head_tension_max_Nm,3000,N/m,Remo Ambassador burst spec estimate,low
+alpha01,2.4048,dimensionless,Bessel J0 first zero,high
+speed_of_sound_ms,343,m/s,air at 20C,high
