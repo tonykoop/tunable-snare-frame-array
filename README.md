@@ -3,7 +3,8 @@
 
 **Family:** Percussion · Membranophone · Frame drum  
 **Target tuning:** D3 / A3 / D4 (3-pitch D minor triad cluster, ±50 cents, tunable by head tension)  
-**Ergonomic envelope:** Three frame drums (150 mm, 200 mm, 250 mm OD) mounted side-by-side on a 450 mm shared steel bracket frame; total playing width ≈ 550 mm, height ≈ 300 mm, depth ≈ 80 mm
+**Ergonomic envelope:** Three frame drums (150 mm, 200 mm, 250 mm OD) mounted side-by-side on a 450 mm shared steel bracket frame; total playing width ≈ 550 mm, height ≈ 300 mm, depth ≈ 80 mm  
+**Status:** L2 V5 build-packet candidate
 
 ---
 
