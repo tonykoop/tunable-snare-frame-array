@@ -47,7 +47,7 @@ Total: **29 files** across 6 phases
 | Phase | Files |
 |-------|-------|
 | feat/license | LICENSE, LICENSE-HARDWARE.md, LICENSE-DOCS.md |
-| feat/design | README.md, design.md, parameters.csv, tuning-notes.md, wolfram-starter.wl |
+| feat/design | README.md, design.md, parameters.csv, tuning-notes.md, tunable-snare-frame-array-starter.wl |
 | feat/cad-and-flat-patterns | solidworks-plan.md, flat-pattern-checklist.md, bend-table.csv, cut-list.csv, drawings/.gitkeep, cad/.gitkeep |
 | feat/fabrication-plan | fabrication-plan.md, assembly-manual.md, bom.csv, hardware.csv, sourcing.csv, supplier-rfq.md, cnc/operations.csv, cnc/setup-sheet.md |
 | feat/validation-and-risks | validation.csv, risks.md, photo-shotlist.md, visual-bom-brief.md |

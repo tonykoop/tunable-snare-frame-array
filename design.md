@@ -51,7 +51,7 @@ Predicted frequencies at nominal tension T = 1200 N/m:
 | B (8″) | 0.0965 | 189 Hz | A3 220 Hz | −260 cents |
 | C (6″) | 0.076 | 240 Hz | D4 294 Hz | −350 cents |
 
-The large negative deltas at T=1200 N/m show that target pitches require higher tensions (1600–2800 N/m) — well within the Remo Ambassador spec (~3000 N/m burst). `wolfram-starter.wl` solves for required tension at each target. See `validation.csv` for refined predicted values.
+The large negative deltas at T=1200 N/m show that target pitches require higher tensions (1600–2800 N/m) — well within the Remo Ambassador spec (~3000 N/m burst). `tunable-snare-frame-array-starter.wl` solves for required tension at each target. See `validation.csv` for refined predicted values.
 
 ---
 

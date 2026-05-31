@@ -2,7 +2,7 @@ artifact_id,path,artifact_kind,role,authority,dimension_claim,derived_from,fabri
 V5-REG-001,README.md,markdown,packet-overview,concept_only,none,existing repo packet,false,self_checked,V5 status line added; not a fabrication artifact.
 V5-REG-002,design.md,markdown,design-narrative,pending_measurement,acoustic model and geometry targets require review,existing Round 5 packet,false,unreviewed,Bessel model numeric claims are planning authority until prototype measurement.
 V5-REG-003,parameters.csv,csv,parameter-table,pending_measurement,all dimensions require review,design.md,false,unreviewed,Single source of truth for planning; not fabrication authority.
-V5-REG-004,wolfram-starter.wl,wolfram,model-source,pending_measurement,computed membrane frequencies require execution and evidence,design.md,false,unreviewed,Source only; not executed in this lane.
+V5-REG-004,tunable-snare-frame-array-starter.wl,wolfram,model-source,pending_measurement,computed membrane frequencies require execution and evidence,design.md,false,unreviewed,Source only; not executed in this lane.
 V5-REG-005,solidworks-plan.md,markdown,cad-plan,pending_measurement,planned CAD global variables require CAD review,parameters.csv,true,unreviewed,Plan only; no .sldprt or .sldasm exists in this repo.
 V5-REG-006,flat-pattern-checklist.md,markdown,dxf-spec,pending_measurement,flat-pattern dimensions require CAD/DXF review,parameters.csv,true,unreviewed,Spec only; no DXF geometry present.
 V5-REG-007,bend-table.csv,csv,bend-planning-table,pending_measurement,bend allowances require shop and CAD review,flat-pattern-checklist.md,true,unreviewed,Planning surface; not reviewed against tooling or coupon tests.

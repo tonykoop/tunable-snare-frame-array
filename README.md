@@ -22,7 +22,7 @@ The instrument reads as a hand-percussion kit (clave-like cross-stick, brushed r
 |------|---------|
 | `design.md` | Parametric design + acoustic model |
 | `parameters.csv` | All dimensions — single source of truth |
-| `wolfram-starter.wl` | First-order membrane frequency model |
+| `tunable-snare-frame-array-starter.wl` | First-order membrane frequency model |
 | `validation.csv` | Predicted targets + measurement gates |
 | `fabrication-plan.md` | Maker Nexus cut → roll → weld → assemble sequence |
 | `bom.csv` | Bill of materials with supplier hints |
