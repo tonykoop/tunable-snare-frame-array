@@ -1,0 +1,35 @@
+{
+  "packet_dir": ".",
+  "title": "Tunable Snare Frame Array — Starter Packet",
+  "instrument": "tunable snare frame array",
+  "build_target": "tunable snare frame array reference scaffold",
+  "artifact_focus": "percussion instrument starter packet",
+  "generated": "2026-06-21",
+  "readiness": "starter",
+  "release_status": "private / starter scaffold",
+  "fabrication_authority": {
+    "current_status": "starter scaffold — not for fabrication",
+    "generated_images_allowed_as_authority": false,
+    "wolfram_allowed_as_authority": false
+  },
+  "engineering": {
+    "wolfram": [
+      {
+        "source_file": "percussion/tunable-snare-frame-array/tunable-snare-frame-array-starter.wl",
+        "cloud_path": "Musical_Instruments/percussion/tunable-snare-frame-array/tunable-snare-frame-array-starter.wl",
+        "cloud_url": "https://www.wolframcloud.com/obj/wrfcoin/Musical_Instruments/percussion/tunable-snare-frame-array/tunable-snare-frame-array-starter.wl",
+        "permission": "Public-Execute",
+        "kind": "acoustics-starter"
+      }
+    ]
+  },
+  "files_included": [
+    "README.md",
+    "design.md",
+    "bom.csv",
+    "sourcing.csv",
+    "cut-list.csv",
+    "assembly-manual.md",
+    "validation.csv"
+  ]
+}
