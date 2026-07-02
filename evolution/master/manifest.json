@@ -1,0 +1,34 @@
+{
+  "product": "tunable-snare-frame-array",
+  "pipeline": "studiopipeline:evolution-pipeline",
+  "stage": "0-intake",
+  "master_revision": "rev-A (pre-commit intake, 2026-07-01)",
+  "generated": "2026-07-01",
+  "cad_masters": [
+    {
+      "path": "cad/tunable-snare-frame-array.scad",
+      "format": "openscad-source",
+      "sha256": "827722c7ed5bbfccc3cb07f178c27a4b68c70fcb8cf84483679f25fbc1086f06",
+      "authority": "pending_measurement",
+      "lossy": false,
+      "notes": "Three rolled-cylinder shell envelopes + mounting-frame flat/flange envelope. Frame cutouts and exact drum spacing out of scope (unresolved in source docs)."
+    },
+    {
+      "path": "parameters.csv",
+      "format": "parameter-table",
+      "sha256": "e1d43284038be2fa18797bd949bf80dfad56ec63f3702a8946c492022cb44d1d",
+      "authority": "pending_measurement",
+      "lossy": false,
+      "notes": "Single source of truth for planning dimensions; not yet reviewed (V5-REG-003)."
+    },
+    {
+      "path": "tunable-snare-frame-array-starter.wl",
+      "format": "wolfram-source",
+      "sha256": "7b660686ada57ef2e6680fe78b95f80dd3954b03a59ddc17eabc58101aa88536",
+      "authority": "pending_measurement",
+      "lossy": false,
+      "notes": "Source-only (not executed); first-order membrane frequency model."
+    }
+  ],
+  "notes": "OpenSCAD source is the current CAD master; no SolidWorks/STEP export yet (solidworks-plan.md is a plan only). Frame cutout/drum-spacing geometry is an open item flagged in solidworks-plan.md itself ('Adjust spacing to 450 mm frame') and requires a reviewed CAD session before it can be modeled with fabrication intent. Gate A (Alpha workspace compile) not yet run."
+}

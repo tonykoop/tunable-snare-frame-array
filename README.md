@@ -27,6 +27,8 @@ The instrument reads as a hand-percussion kit (clave-like cross-stick, brushed r
 | `fabrication-plan.md` | Maker Nexus cut → roll → weld → assemble sequence |
 | `bom.csv` | Bill of materials with supplier hints |
 | `explorer.html` | Single-page packet viewer |
+| `cad/tunable-snare-frame-array.scad` | Parametric OpenSCAD shell + frame envelope master (`pending_measurement`) |
+| `evolution/` | evolution-pipeline Stage 0 intake: master manifest, design-intent, revision register (Gate A not yet run) |
 
 ---
 
